@@ -6,32 +6,44 @@ document
 
     var title = document.getElementById("inputBookTitle").value;
     var author = document.getElementById("inputBookAuthor").value;
-    var year = document.getElementById("inputBookYear").value;
+    var year = parseInt(document.getElementById("inputBookYear").value);
     var isComplete = document.getElementById("inputBookIsComplete").checked;
 
     var book = {
-      id: +new Date(),
+      id: +new Date().getTime(),
       title: title,
       author: author,
       year: year,
       isComplete: isComplete,
     };
 
-    var bookJSON = JSON.stringify(book);
+    // Cek tipe data properti
+    var tipeData =
+      (typeof book.id === "string" || typeof book.id === "number") &&
+      typeof book.title === "string" &&
+      typeof book.author === "string" &&
+      typeof book.year === "number" &&
+      typeof book.isComplete === "boolean";
 
-    var currentIndex = localStorage.getItem("currentIndex") || 0;
-    localStorage.setItem("bookData" + currentIndex, bookJSON);
+    if (tipeData) {
+      var bookJSON = JSON.stringify(book);
 
-    currentIndex++;
-    localStorage.setItem("currentIndex", currentIndex);
+      var currentIndex = localStorage.getItem("currentIndex") || 0;
+      localStorage.setItem("bookData" + currentIndex, bookJSON);
 
-    document.getElementById("inputBook").reset();
-    if (isComplete) {
-      displayComplete(book);
+      currentIndex++;
+      localStorage.setItem("currentIndex", currentIndex);
+
+      document.getElementById("inputBook").reset();
+      if (isComplete) {
+        displayComplete(book);
+      } else {
+        displayinComplete(book);
+      }
+      alert("Buku berhasil ditambahkan!");
     } else {
-      displayinComplete(book);
+      alert("Data buku tidak sesuai tipe yang diharapkan.");
     }
-    alert("Buku berhasil ditambahkan!");
   });
 
 // Load data dari localStorage
